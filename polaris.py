@@ -4,6 +4,7 @@ import numpy as np
 
 st.set_page_config(
     page_title="Polaris",
+    page_icon= "📍",
     layout="wide",
     menu_items={
         'Get Help': 'https://docs.streamlit.io/',
@@ -16,25 +17,24 @@ st.set_page_config(
 
 st.title = "Polaris"
 st.header("Polaris: The Hobby App")
-st.write("Please fill out the interests form on the top left menu to get started.")
+st.write("👈Please fill out the interests form on the top left menu to get started.")
 
 coord1 = None
 coord2 = None
 
 # Hobbies/Interests Questionnaire
 with st.sidebar:
-    agree = st.checkbox('Do you agree to submit your personal information to this application?')
+    agree = st.checkbox('Click here to start!')
     if agree:
-        st.write("Enter your name")
-        first_name = st.text_input('First Name')
-        last_name = st.text_input('Last Name')
         # Location section
-        st.write("Where do you live?")
+        st.write("Enter a location: ")
         col1, col2 = st.columns(2)
         with col1:
             coord1 = st.text_input("Latitude")
         with col2:
             coord2 = st.text_input("Longitude")
+
+
 
         hobby = st.radio(
             "Do you consider your hobbies extroverted or introverted?",
@@ -50,7 +50,7 @@ with st.sidebar:
         st.write('You are:', values, hobby)
 
         options = st.multiselect(
-            'What do you like?',
+            'What do you like to do for fun?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
         if options:
             st.write('You like:')
@@ -60,7 +60,7 @@ with st.sidebar:
 col3, col4 = st.columns(2)
 with col3:
     # Displaying the Map
-    st.subheader("Map")
+    st.subheader("🗺️Map")
     if coord1 and coord2:
         df = pd.DataFrame({
             'lat': [float(coord1)],
@@ -73,4 +73,4 @@ with col3:
 
 with col4:
     # Displaying Locations/Events/Addresses
-    st.subheader("Locations")
+    st.subheader("📍Locations")
