@@ -4,6 +4,7 @@ import numpy as np
 
 st.set_page_config(
     page_title="Polaris",
+    page_icon= "📍",
     layout="wide",
     menu_items={
         'Get Help': 'https://docs.streamlit.io/',
@@ -16,24 +17,22 @@ st.set_page_config(
 
 st.title = "Polaris"
 st.header("Polaris: The Hobby App")
-st.write("Please fill out the interests form on the top left menu to get started.")
+st.write("👈Please fill out the interests form on the top left menu to get started.")
 
 coord1 = None
 coord2 = None
 
 # Hobbies/Interests Questionnaire
 with st.sidebar:
-    agree = st.checkbox('Do you agree to submit your personal information to this application?')
+    agree = st.checkbox('Click here to start!')
     if agree:
-        st.write("Enter your name")
-        first_name = st.text_input('First Name')
-        last_name = st.text_input('Last Name')
-        age = st.number_input('Your Age',min_value=1.0,
+
+        age = st.number_input('Enter Your Age',min_value=1.0,
          max_value=100.0,
          step=1.0,
         )
         # Location section
-        st.write("Where do you live?")
+        st.write("Enter a location: ")
         col1, col2 = st.columns(2)
         with col1:
             coord1 = st.text_input("Latitude")
@@ -85,7 +84,7 @@ with st.sidebar:
 col3, col4 = st.columns(2)
 with col3:
     # Displaying the Map
-    st.subheader("Map")
+    st.subheader("🗺️Map")
     if coord1 and coord2:
         df = pd.DataFrame({
             'lat': [float(coord1)],
@@ -101,4 +100,4 @@ with col3:
         st.write("Thank you ::thumbsup:")
 with col4:
     # Displaying Locations/Events/Addresses
-    st.subheader("Locat
+     st.subheader("📍Locations")
