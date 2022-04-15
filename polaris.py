@@ -72,7 +72,13 @@ with st.sidebar:
 
         st.bar_chart(chart_data)
 
-
+        st.write("Certain hobbies can be described as being introverted or extroverted activities. Such as:")
+        df = pd.DataFrame({
+            "Hobby": ['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying'],
+            "Type": ['Extroverted', 'Introverted', 'Introverted', 'Introverted', 'Introverted', 'Extroverted']
+        })
+        st.dataframe(df)
+        
         options = st.multiselect(
             'What do you like?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
