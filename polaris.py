@@ -1,10 +1,27 @@
+import reverse_geocode
 import streamlit as st
 import pandas as pd
 import numpy as np
+import requests
+from requests.structures import CaseInsensitiveDict
+from geopy.geocoders import Nominatim
+
+geolocator = Nominatim(user_agent="http")
+
+url = "https://nearby-places.p.rapidapi.com/v2/nearby"
+
+querystring = {"lat": "26", "lng": "-80", "radius": "1000"}
+
+headers = {
+    "X-RapidAPI-Host": "nearby-places.p.rapidapi.com",
+    "X-RapidAPI-Key": "d9fb350effmsh4494ebe218be745p172f81jsna3cdf3b83675"
+}
+
+response = requests.request("GET", url, headers=headers, params=querystring)
 
 st.set_page_config(
     page_title="Polaris",
-    page_icon= "📍",
+    page_icon="📍",
     layout="wide",
     menu_items={
         'Get Help': 'https://docs.streamlit.io/',
@@ -21,16 +38,16 @@ st.write("👈Please fill out the interests form on the top left menu to get sta
 
 coord1 = None
 coord2 = None
+location = None
 
 # Hobbies/Interests Questionnaire
 with st.sidebar:
     agree = st.checkbox('Click here to start!')
     if agree:
-
-        age = st.number_input('Enter Your Age',min_value=1.0,
-         max_value=100.0,
-         step=1.0,
-        )
+        age = st.number_input('Enter Your Age', min_value=1.0,
+                              max_value=100.0,
+                              step=1.0,
+                              )
         # Location section
         st.write("Enter a location: ")
         col1, col2 = st.columns(2)
@@ -38,6 +55,11 @@ with st.sidebar:
             coord1 = st.text_input("Latitude")
         with col2:
             coord2 = st.text_input("Longitude")
+        if coord1 and coord2:
+            coords_list = [coord1, coord2]
+            location = geolocator.reverse(coords_list)
+            # coordinates = (coord1, coord2)
+            # reverse_geocode.search(coordinates)
 
         hobby = st.radio(
             "Do you consider your hobbies extroverted or introverted?",
@@ -46,25 +68,25 @@ with st.sidebar:
             exvalues = st.slider(
                 'How extroverted are you on a scale of 1-10?',
                 0.0, 10.0, 5.0)
-            invalues=0
+            invalues = 0
             st.write('You are:', exvalues, hobby)
 
         if hobby == "Introverted":
             invalues = st.slider(
                 'How introverted are you on a scale of 1-10?',
                 0.0, 10.0, 5.0)
-            exvalues=0
+            exvalues = 0
             st.write('You are:', invalues, hobby)
 
-        if exvalues==0:
-            exvalues= invalues-10
+        if exvalues == 0:
+            exvalues = invalues - 10
             chart_data = pd.DataFrame({
                 "Introverted": [invalues],
                 "Extroverted": [exvalues]}
-                )
+            )
 
-        if invalues==0:
-            invalues=exvalues-10
+        if invalues == 0:
+            invalues = exvalues - 10
             chart_data = pd.DataFrame({
                 "Introverted": [invalues],
                 "Extroverted": [exvalues]}
@@ -72,14 +94,13 @@ with st.sidebar:
 
         st.bar_chart(chart_data)
 
-
         options = st.multiselect(
             'What do you like?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
         if options:
             st.write('You like:')
             for x in options:
-                    st.text(x)
+                st.text(x)
 
 col3, col4 = st.columns(2)
 with col3:
@@ -95,9 +116,11 @@ with col3:
     else:
         st.error("Empty or invalid coordinates!")
 
-    result= st.button("When you are finished click")
+    result = st.button("When you are finished click")
     if result:
         st.write("Thank you ::thumbsup:")
 with col4:
     # Displaying Locations/Events/Addresses
-     st.subheader("📍Locations")
+    st.subheader("📍Locations")
+    st.write(location)
+    st.write(response.text)
