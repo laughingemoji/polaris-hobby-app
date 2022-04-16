@@ -8,17 +8,6 @@ from geopy.geocoders import Nominatim
 
 geolocator = Nominatim(user_agent="http")
 
-url = "https://nearby-places.p.rapidapi.com/v2/nearby"
-
-querystring = {"lat": "26", "lng": "-80", "radius": "1000"}
-
-headers = {
-    "X-RapidAPI-Host": "nearby-places.p.rapidapi.com",
-    "X-RapidAPI-Key": "d9fb350effmsh4494ebe218be745p172f81jsna3cdf3b83675"
-}
-
-response = requests.request("GET", url, headers=headers, params=querystring)
-
 st.set_page_config(
     page_title="Polaris",
     page_icon="📍",
@@ -94,8 +83,7 @@ with st.sidebar:
 
         st.bar_chart(chart_data)
 
-<<<<<<< HEAD
-=======
+
         st.write("Certain hobbies can be described as being introverted or extroverted activities. Such as:")
         df = pd.DataFrame({
             "Hobby": ['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying'],
@@ -103,7 +91,7 @@ with st.sidebar:
         })
         st.dataframe(df)
         
->>>>>>> 012f8d958e169c347b59921ea1327c372289293e
+
         options = st.multiselect(
             'What do you like?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
@@ -133,4 +121,3 @@ with col4:
     # Displaying Locations/Events/Addresses
     st.subheader("📍Locations")
     st.write(location)
-    st.write(response.text)
