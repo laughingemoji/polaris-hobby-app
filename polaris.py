@@ -1,12 +1,19 @@
-import reverse_geocode
+import time
+import googlemaps
 import streamlit as st
 import pandas as pd
 import numpy as np
-import requests
-from requests.structures import CaseInsensitiveDict
-from geopy.geocoders import Nominatim
 
-geolocator = Nominatim(user_agent="http")
+API_KEY = 'AIzaSyCCDa3eBvAPo5LEwML9-e7calmLuSSyrwQ'
+map_client = googlemaps.Client(API_KEY)
+
+
+def miles_to_meters(miles):
+    try:
+        return miles * 1_609.344
+    except:
+        return 0
+
 
 st.set_page_config(
     page_title="Polaris",
@@ -27,7 +34,9 @@ st.write("👈Please fill out the interests form on the top left menu to get sta
 
 coord1 = None
 coord2 = None
-location = None
+business_list = []
+search_string = ""
+distance = miles_to_meters(10)
 
 # Hobbies/Interests Questionnaire
 with st.sidebar:
@@ -46,9 +55,6 @@ with st.sidebar:
             coord2 = st.text_input("Longitude")
         if coord1 and coord2:
             coords_list = [coord1, coord2]
-            location = geolocator.reverse(coords_list)
-            # coordinates = (coord1, coord2)
-            # reverse_geocode.search(coordinates)
 
         hobby = st.radio(
             "Do you consider your hobbies extroverted or introverted?",
@@ -83,20 +89,19 @@ with st.sidebar:
 
         st.bar_chart(chart_data)
 
-
         st.write("Certain hobbies can be described as being introverted or extroverted activities. Such as:")
         df = pd.DataFrame({
             "Hobby": ['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying'],
             "Type": ['Extroverted', 'Introverted', 'Introverted', 'Introverted', 'Introverted', 'Extroverted']
         })
         st.dataframe(df)
-        
 
         options = st.multiselect(
             'What do you like?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
         if options:
             st.write('You like:')
+            search_string = options[0]
             for x in options:
                 st.text(x)
 
@@ -120,4 +125,25 @@ with col3:
 with col4:
     # Displaying Locations/Events/Addresses
     st.subheader("📍Locations")
-    st.write(location)
+    if coord1 and coord2:
+        response = map_client.places_nearby(
+            location=(coord1, coord2),
+            keyword=search_string,
+            radius=distance
+        )
+        business_list.extend(response.get('results'))
+        next_page_token = response.get('next_page_token')
+        while next_page_token:
+            time.sleep(2)
+            response = map_client.places_nearby(
+                location=(coord1, coord2),
+                keyword=search_string,
+                radius=distance,
+                page_token=next_page_token
+            )
+            business_list.extend(response.get('results'))
+            next_page_token = response.get('next_page_token')
+
+        for x in business_list:
+            st.write(x["name"])
+
