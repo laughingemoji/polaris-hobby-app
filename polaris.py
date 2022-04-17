@@ -36,7 +36,6 @@ coord1 = None
 coord2 = None
 business_list = []
 search_string = ""
-distance = miles_to_meters(10)
 
 # Hobbies/Interests Questionnaire
 with st.sidebar:
@@ -65,6 +64,7 @@ with st.sidebar:
                 0.0, 10.0, 5.0)
             invalues = 0
             st.write('You are:', exvalues, hobby)
+            distance = miles_to_meters(exvalues+10)
 
         if hobby == "Introverted":
             invalues = st.slider(
@@ -72,6 +72,7 @@ with st.sidebar:
                 0.0, 10.0, 5.0)
             exvalues = 0
             st.write('You are:', invalues, hobby)
+            distance = miles_to_meters(10)
 
         if exvalues == 0:
             exvalues = invalues - 10
@@ -105,7 +106,10 @@ with st.sidebar:
             search_string = options[0]
             # Or, we pre-select a few categories based off what they pick
             if search_string == "Sports":
-                search_string = "kids arcade"
+                if age > 14:
+                    search_string = "stadium"
+                else:
+                    search_string = "kids arcade"
             elif search_string == "Gaming":
                 search_string = "VR"
             elif search_string == "Art":
@@ -115,7 +119,10 @@ with st.sidebar:
             elif search_string == "Reading":
                 search_string = "book"
             elif search_string == "Partying":
-                search_string = "club"
+                if age >= 21:
+                    search_string = "club"
+                else:
+                    search_string = "beach"
             for x in options:
                 st.text(x)
 
@@ -130,13 +137,13 @@ with col3:
             'lon': [float(coord2)], })
         st.dataframe(df)
         st.map(df)
-        st.success("Map Successfully formed")
+        st.success("Map Successfully Formed")
     else:
-        st.error("Empty or invalid coordinates!")
+        st.error("Empty or Invalid Coordinates!")
 
-    result = st.button("When you are finished click")
+    result = st.button("Done?")
     if result:
-        st.write("Thank you ::thumbsup:")
+        st.write("Thank you for using Polaris! :thumbsup:")
 with col4:
     # Displaying Locations/Events/Addresses
     st.subheader("📍Locations")
