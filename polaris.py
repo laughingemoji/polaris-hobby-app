@@ -97,13 +97,17 @@ with st.sidebar:
         st.dataframe(df)
 
         options = st.multiselect(
-            'What do you like?',
+            'What would you like to search for?',
             (['Sports', 'Gaming', 'Art', 'Music', 'Reading', 'Partying']))
         if options:
             st.write('You like:')
+            # This will search up the locations based on whatever hobby they chose
             search_string = options[0]
             for x in options:
                 st.text(x)
+            # Or, we pre-select a few categories based off what they pick
+            #if options == "Sports":
+            #    search_string = "arcade"
 
 col3, col4 = st.columns(2)
 with col3:
@@ -145,5 +149,6 @@ with col4:
             next_page_token = response.get('next_page_token')
 
         for x in business_list:
-            st.write(x["name"])
+            st.info(" **{0}** \n {1}".format(x["name"], x["vicinity"]))
+
 
