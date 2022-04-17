@@ -103,11 +103,22 @@ with st.sidebar:
             st.write('You like:')
             # This will search up the locations based on whatever hobby they chose
             search_string = options[0]
+            # Or, we pre-select a few categories based off what they pick
+            if search_string == "Sports":
+                search_string = "kids arcade"
+            elif search_string == "Gaming":
+                search_string = "VR"
+            elif search_string == "Art":
+                search_string = "gallery"
+            elif search_string == "Music":
+                search_string = "concert"
+            elif search_string == "Reading":
+                search_string = "book"
+            elif search_string == "Partying":
+                search_string = "club"
             for x in options:
                 st.text(x)
-            # Or, we pre-select a few categories based off what they pick
-            #if options == "Sports":
-            #    search_string = "arcade"
+
 
 col3, col4 = st.columns(2)
 with col3:
@@ -149,6 +160,4 @@ with col4:
             next_page_token = response.get('next_page_token')
 
         for x in business_list:
-            st.info(" **{0}** \n {1}".format(x["name"], x["vicinity"]))
-
-
+            st.info("**{0}** \n {1}".format(x["name"], x["vicinity"]))
